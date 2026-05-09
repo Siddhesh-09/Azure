@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SS Turf</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--green:#00c853;--green-dark:#009624;--green-light:#e8f5e9;--green-glow:rgba(0,200,83,0.12);
+--yellow:#ffeb3b;--yellow-dark:#f9a825;--yellow-light:#fffde7;--yellow-glow:rgba(255,235,59,0.3);
+--bg:#fefefe;--bg2:#f7faf7;--bg3:#f0f7f0;--bg-card:#ffffff;
+--text:#1a2e1a;--text-muted:#4a6741;--text-dim:#8aab82;
+--border:rgba(0,150,36,0.15);--border-hover:rgba(0,200,83,0.4);
+--shadow:0 2px 16px rgba(0,200,83,0.08);--shadow-md:0 4px 32px rgba(0,200,83,0.14);
+--radius:12px;--radius-lg:20px;--transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;min-height:100vh}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:'DM Sans',sans-serif;border:none;background:none}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#f0f7f0}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:3px}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.section{padding:90px 0}
+.section-sm{padding:56px 0}
+.divider{height:1px;background:linear-gradient(to right,transparent,var(--border),transparent)}
+
+/* NAVBAR */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 0;transition:var(--transition);background:transparent}
+#navbar.scrolled{background:rgba(254,254,254,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:var(--shadow);padding:12px 0}
+.nav-inner{display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;color:var(--green-dark)}
+.logo span{color:var(--yellow-dark)}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{padding:8px 16px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text-muted);transition:var(--transition)}
+.nav-links a:hover,.nav-links a.active{color:var(--green-dark);background:var(--green-glow)}
+.nav-cta{background:var(--green)!important;color:#fff!important;padding:10px 24px!important;border-radius:50px!important;font-weight:700!important;font-size:13px!important;box-shadow:0 2px 12px rgba(0,200,83,0.3)}
+.nav-cta:hover{background:var(--green-dark)!important;transform:translateY(-1px)}
+.hamburger{display:none;flex-direction:column;gap:5px;padding:8px;cursor:pointer}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:var(--transition)}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(254,254,254,0.98);backdrop-filter:blur(30px);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:3px;color:var(--text-muted);transition:var(--transition)}
+.mobile-menu a:hover{color:var(--green)}
+
+/* BUTTONS */
+.btn-primary{background:var(--green);color:#fff;padding:16px 36px;border-radius:50px;font-weight:700;font-size:15px;letter-spacing:.5px;transition:var(--transition);display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,200,83,0.3)}
+.btn-primary:hover{background:var(--green-dark);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,200,83,0.35)}
+.btn-secondary{border:2px solid var(--green);color:var(--green-dark);padding:14px 32px;border-radius:50px;font-weight:600;font-size:15px;transition:var(--transition);display:inline-flex;align-items:center;gap:8px;background:#fff}
+.btn-secondary:hover{background:var(--green-glow);transform:translateY(-2px)}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:80px;background:var(--bg)}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 75% 35%,rgba(0,200,83,0.07) 0%,transparent 70%),radial-gradient(ellipse 35% 50% at 15% 75%,rgba(255,235,59,0.12) 0%,transparent 70%)}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;width:100%}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--green-light);border:1.5px solid var(--border-hover);border-radius:50px;padding:6px 16px;font-size:12px;font-weight:700;color:var(--green-dark);letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
+.hero-badge .dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,7.5vw,96px);line-height:.95;letter-spacing:2px;margin-bottom:24px;color:var(--text)}
+.hero-title .g{color:var(--green)}
+.hero-title .y{color:var(--yellow-dark)}
+.hero-title .outline{-webkit-text-stroke:2px var(--green);color:transparent}
+.hero-sub{font-size:16px;color:var(--text-muted);line-height:1.75;max-width:440px;margin-bottom:40px}
+.hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:44px}
+.stat-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow);transition:var(--transition)}
+.stat-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--green);letter-spacing:1px}
+.stat-label{font-size:11px;color:var(--text-muted);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+
+/* Quick widget */
+.book-widget{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:20px;box-shadow:var(--shadow)}
+.widget-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:12px}
+.widget-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:flex-end}
+.wfield label{font-size:11px;color:var(--text-muted);letter-spacing:.5px;margin-bottom:4px;display:block;font-weight:600}
+.wfield input,.wfield select{background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;width:100%;outline:none;transition:var(--transition)}
+.wfield input:focus,.wfield select:focus{border-color:var(--border-hover)}
+.wfield select option{background:#fff}
+.w-btn{background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-weight:700;font-size:13px;white-space:nowrap;transition:var(--transition);box-shadow:0 2px 8px rgba(0,200,83,0.25)}
+.w-btn:hover{background:var(--green-dark)}
+
+/* CAROUSEL */
+.carousel{border-radius:var(--radius-lg);overflow:hidden;aspect-ratio:4/5;position:relative;background:var(--bg2);border:2px solid var(--border);box-shadow:var(--shadow-md)}
+.carousel-track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);height:100%}
+.carousel-slide{min-width:100%;height:100%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.carousel-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 55%)}
+.carousel-info{position:absolute;bottom:24px;left:24px;right:24px}
+.carousel-tag{background:var(--green);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:50px;letter-spacing:1px;text-transform:uppercase;display:inline-block;margin-bottom:8px}
+.carousel-caption{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:#fff}
+.carousel-dots{position:absolute;top:20px;right:20px;display:flex;gap:6px}
+.cdot{height:6px;border-radius:3px;cursor:pointer;transition:var(--transition);background:rgba(255,255,255,0.4)}
+.cdot.active{background:var(--green);width:20px!important}
+
+/* SECTION HEADERS */
+.section-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--green);margin-bottom:10px;display:block}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,5.5vw,68px);letter-spacing:2px;line-height:1;margin-bottom:16px;color:var(--text)}
+.section-subtitle{font-size:16px;color:var(--text-muted);max-width:480px;line-height:1.75}
+.pill{display:inline-block;background:var(--green-glow);border:1.5px solid var(--border-hover);border-radius:50px;padding:4px 14px;font-size:12px;color:var(--green-dark);font-weight:700}
+
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+.feat-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:28px;transition:var(--transition);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:var(--transition)}
+.feat-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow-md);transform:translateY(-4px)}
+.feat-card:hover::before{transform:scaleX(1)}
+.feat-icon{width:52px;height:52px;background:var(--green-light);border:1.5px solid var(--border-hover);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px}
+.feat-title{font-size:17px;font-weight:700;margin-bottom:8px;color:var(--text)}
+.feat-desc{font-size:14px;color:var(--text-muted);line-height:1.65}
+
+/* SPORT SECTION */
+.sport-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+.sport-card{border-radius:var(--radius-lg);overflow:hidden;position:relative;min-height:260px;display:flex;align-items:flex-end;border:2px solid var(--border);box-shadow:var(--shadow);transition:var(--transition);cursor:default}
+.sport-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--border-hover)}
+.sport-card-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:80px}
+.sport-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 60%)}
+.sport-card-info{position:relative;z-index:1;padding:24px}
+.sport-card-name{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:#fff;margin-bottom:4px}
+.sport-card-sub{font-size:13px;color:rgba(255,255,255,0.75);font-weight:500}
+.sport-badge{display:inline-block;padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+
+/* TESTIMONIALS */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+.testi-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);transition:var(--transition)}
+.testi-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.stars{color:var(--yellow-dark);font-size:15px;letter-spacing:2px;margin-bottom:14px}
+.testi-text{font-size:14px;color:var(--text-muted);line-height:1.75;margin-bottom:18px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:12px}
+.avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.author-name{font-size:14px;font-weight:700;color:var(--text)}
+.author-role{font-size:12px;color:var(--text-muted)}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.amenity-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted)}
+.amen-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+
+/* BOOKING */
+.booking-layout{display:grid;grid-template-columns:1fr 360px;gap:36px;align-items:start}
+.b-panel{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow)}
+.b-panel-title{font-size:17px;font-weight:700;margin-bottom:22px;display:flex;align-items:center;gap:10px;color:var(--text)}
+.b-num{width:28px;height:28px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;flex-shrink:0}
+/* Calendar */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.cal-nav{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--text-muted);cursor:pointer;transition:var(--transition);background:#fff}
+.cal-nav:hover{border-color:var(--border-hover);color:var(--green-dark);background:var(--green-light)}
+.cal-month{font-size:16px;font-weight:700;color:var(--text)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-dow{text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-dim);padding:4px}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:13px;cursor:pointer;transition:var(--transition);border:1px solid transparent}
+.cal-day:not(.disabled):not(.past):hover{background:var(--green-light);border-color:var(--border-hover);color:var(--green-dark)}
+.cal-day.selected{background:var(--green);color:#fff!important;font-weight:700;border-color:transparent}
+.cal-day.today{border-color:var(--green);color:var(--green-dark);font-weight:700}
+.cal-day.past{color:var(--text-dim);cursor:not-allowed}
+/* Slots */
+.slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.slot{padding:10px 4px;border-radius:8px;border:1.5px solid var(--border);text-align:center;font-size:12px;font-weight:600;cursor:pointer;transition:var(--transition);font-family:'Space Mono',monospace;background:#fff}
+.slot.available:hover{border-color:var(--border-hover);background:var(--green-light);color:var(--green-dark)}
+.slot.selected{background:var(--green);color:#fff;border-color:transparent;box-shadow:0 2px 8px rgba(0,200,83,0.3)}
+.slot.booked{background:#fafafa;color:var(--text-dim);cursor:not-allowed;text-decoration:line-through;opacity:.5}
+.slot-legend{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+/* Summary */
+.summary-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px}
+.summary-row:last-of-type{border-bottom:none}
+.summary-row .lbl{color:var(--text-muted)}
+.summary-row .val{font-weight:700;color:var(--text)}
+.summary-total{background:var(--green-light);border:2px solid var(--border-hover);border-radius:var(--radius);padding:16px;margin-top:16px;display:flex;justify-content:space-between;align-items:center}
+.total-lbl{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--green-dark);font-weight:700}
+.total-amt{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--green-dark);letter-spacing:1px}
+.book-now{width:100%;padding:16px;border-radius:var(--radius);background:var(--green);color:#fff;font-weight:700;font-size:16px;margin-top:14px;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(0,200,83,0.3);cursor:pointer;border:none}
+.book-now:hover{background:var(--green-dark);transform:translateY(-2px)}
+.sport-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.sport-tab{padding:8px 18px;border-radius:50px;border:1.5px solid var(--border);font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:var(--transition);background:#fff}
+.sport-tab.active{background:var(--green);color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(0,200,83,0.25)}
+.sport-tab:hover:not(.active){border-color:var(--border-hover);color:var(--green-dark);background:var(--green-light)}
+.pricing-row{display:flex;gap:10px;margin-top:18px}
+.price-card{flex:1;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;transition:var(--transition)}
+.price-card.featured{border-color:var(--border-hover);background:var(--green-light)}
+.price-card:hover{border-color:var(--border-hover)}
+.price-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px}
+.price-amt{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--green-dark);letter-spacing:1px}
+.price-unit{font-size:10px;color:var(--text-muted)}
+
+/* GALLERY */
+.gallery-filters{display:flex;gap:8px;margin-bottom:36px;flex-wrap:wrap}
+.filter-btn{padding:8px 18px;border-radius:50px;border:1.5px solid var(--border);font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:var(--transition);background:#fff}
+.filter-btn.active{background:var(--green);color:#fff;border-color:transparent;font-weight:700;box-shadow:0 2px 10px rgba(0,200,83,0.25)}
+.filter-btn:hover:not(.active){border-color:var(--border-hover);color:var(--green-dark);background:var(--green-light)}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.g-item{border-radius:var(--radius);overflow:hidden;cursor:pointer;aspect-ratio:1;border:1.5px solid var(--border);position:relative;transition:var(--transition)}
+.g-item:nth-child(4n+1){grid-column:span 2;aspect-ratio:16/9}
+.g-item:hover{transform:scale(1.01);border-color:var(--border-hover);box-shadow:var(--shadow-md)}
+.g-overlay{position:absolute;inset:0;background:transparent;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+.g-item:hover .g-overlay{background:rgba(0,200,83,0.12)}
+.g-zoom{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;font-size:16px;opacity:0;transform:scale(.8);transition:var(--transition)}
+.g-item:hover .g-zoom{opacity:1;transform:scale(1)}
+/* Lightbox */
+.lightbox{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);align-items:center;justify-content:center}
+.lightbox.open{display:flex}
+.lb-inner{position:relative;max-width:90vw}
+.lb-close{position:absolute;top:-48px;right:0;width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:#666;transition:var(--transition);border:none}
+.lb-close:hover{color:var(--green-dark)}
+.lb-nav{display:flex;gap:12px;justify-content:center;margin-top:16px;align-items:center}
+.lb-btn{width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:#666;transition:var(--transition);border:none;box-shadow:var(--shadow)}
+.lb-btn:hover{color:var(--green-dark)}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+.cf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cf-grid .full{grid-column:span 2}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
+.form-input{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:13px 15px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:var(--transition);width:100%}
+.form-input:focus{border-color:var(--border-hover);background:#fff;box-shadow:0 0 0 3px rgba(0,200,83,0.08)}
+textarea.form-input{resize:vertical;min-height:110px}
+.ci-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:16px;transition:var(--transition);box-shadow:var(--shadow)}
+.ci-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow-md)}
+.ci-icon{font-size:24px;margin-bottom:10px}
+.ci-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:4px}
+.ci-value{font-size:15px;font-weight:600;color:var(--text)}
+.map-ph{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius-lg);height:200px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--text-muted);position:relative;overflow:hidden}
+.map-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:30px 30px;opacity:.7}
+.map-pin{font-size:32px;position:relative;z-index:1;animation:bounce 2s ease infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* FOOTER */
+footer{background:var(--text);padding:56px 0 28px;color:#fff}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px;margin-bottom:44px}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;color:var(--green);margin-bottom:10px}
+.footer-logo span{color:var(--yellow)}
+.footer-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.75;max-width:240px}
+.footer-heading{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.4);margin-bottom:18px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:9px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.55);transition:var(--transition)}
+.footer-links a:hover{color:var(--green)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.3)}
+.social-btn{width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,0.4);cursor:pointer;transition:var(--transition)}
+.social-btn:hover{border-color:var(--green);color:var(--green)}
+
+/* Pages */
+.page{display:none;animation:fadeUp .35s ease forwards}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* Success modal */
+.smodal{display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.6);backdrop-filter:blur(16px);align-items:center;justify-content:center}
+.smodal.open{display:flex}
+.scard{background:#fff;border:2px solid var(--border-hover);border-radius:var(--radius-lg);padding:44px;text-align:center;max-width:400px;animation:popIn .3s cubic-bezier(.4,0,.2,1) forwards;box-shadow:var(--shadow-md)}
+@keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+.sicon{font-size:52px;margin-bottom:16px;animation:spinIn .5s ease .1s backwards;display:block}
+@keyframes spinIn{from{transform:rotate(-20deg) scale(0)}to{transform:rotate(0) scale(1)}}
+.stitle{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--green-dark);letter-spacing:2px;margin-bottom:8px}
+.ssub{font-size:14px;color:var(--text-muted);margin-bottom:20px;line-height:1.65}
+.sref{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);background:var(--bg2);padding:8px 18px;border-radius:8px;display:inline-block;margin-bottom:24px}
+.s-close{background:var(--green);color:#fff;padding:11px 32px;border-radius:50px;font-weight:700;font-size:14px;cursor:pointer;transition:var(--transition);border:none;box-shadow:0 2px 12px rgba(0,200,83,0.3)}
+.s-close:hover{background:var(--green-dark)}
+
+/* Sticky CTA */
+.sticky-cta{position:fixed;bottom:24px;right:24px;z-index:900;background:var(--green);color:#fff;padding:13px 26px;border-radius:50px;font-weight:700;font-size:14px;box-shadow:0 6px 24px rgba(0,200,83,0.35);cursor:pointer;transition:var(--transition);display:flex;align-items:center;gap:8px;animation:slideUp .5s .8s backwards;border:none}
+.sticky-cta:hover{background:var(--green-dark);transform:translateY(-2px)}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* Yellow highlight band */
+.yellow-band{background:var(--yellow);padding:16px 0;text-align:center;font-size:14px;font-weight:700;color:var(--text);letter-spacing:.5px;border-top:2px solid var(--yellow-dark);border-bottom:2px solid var(--yellow-dark)}
+.yellow-band span{margin:0 24px}
+
+/* Scroll hint */
+.scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:2px;animation:floatHint 3s ease infinite}
+@keyframes floatHint{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-6px)}}
+.scroll-arrow{width:20px;height:20px;border-right:2px solid var(--green);border-bottom:2px solid var(--green);transform:rotate(45deg)}
+
+@media(max-width:900px){
+  .hero-grid,.about-grid,.booking-layout,.contact-grid{grid-template-columns:1fr}
+  .hero-visual{order:-1}
+  .features-grid,.testi-grid{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .gallery-grid{grid-template-columns:1fr 1fr}
+  .g-item:nth-child(4n+1){grid-column:span 1;aspect-ratio:1}
+  .sport-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .features-grid,.testi-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .slots-grid{grid-template-columns:repeat(2,1fr)}
+  .cf-grid{grid-template-columns:1fr}
+  .cf-grid .full{grid-column:span 1}
+  .widget-grid{grid-template-columns:1fr 1fr}
+  .widget-grid .w-btn{grid-column:span 2;width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="logo" onclick="go('home')">SS<span> TURF</span></a>
+      <ul class="nav-links">
+        <li><a href="#" onclick="go('home')" id="nl-home" class="active">Home</a></li>
+        <li><a href="#" onclick="go('about')" id="nl-about">About</a></li>
+        <li><a href="#" onclick="go('booking')" id="nl-booking">Booking</a></li>
+        <li><a href="#" onclick="go('gallery')" id="nl-gallery">Gallery</a></li>
+        <li><a href="#" onclick="go('contact')" id="nl-contact">Contact</a></li>
+        <li><a href="#" onclick="go('booking')" class="nav-cta">Book Now ↗</a></li>
+      </ul>
+      <div class="hamburger" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mmenu">
+  <a href="#" onclick="go('home');toggleMenu()">HOME</a>
+  <a href="#" onclick="go('about');toggleMenu()">ABOUT</a>
+  <a href="#" onclick="go('booking');toggleMenu()">BOOKING</a>
+  <a href="#" onclick="go('gallery');toggleMenu()">GALLERY</a>
+  <a href="#" onclick="go('contact');toggleMenu()">CONTACT</a>
+</div>
+
+<!-- STICKY CTA -->
+<button class="sticky-cta" onclick="go('booking')">⚽ Book Your Slot</button>
+
+<!-- ========== HOME ========== -->
+<div id="page-home" class="page active">
+
+  <!-- Yellow announcement band -->
+  <div class="yellow-band" style="margin-top:62px">
+    <span>🌟 SS Turf is Now Open!</span>
+    <span>📍 Pune, Maharashtra</span>
+    <span>🕐 Open 6AM – 1AM Daily</span>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero" style="margin-top:0;padding-top:32px">
+    <div class="hero-bg"></div>
+    <div class="container" style="position:relative;z-index:1;width:100%">
+      <div class="hero-grid">
+        <!-- Left copy -->
+        <div>
+          <div class="hero-badge"><span class="dot"></span>Bookings Open Now</div>
+          <h1 class="hero-title">
+            <div>YOUR GAME,</div>
+            <div class="g">YOUR TURF,</div>
+            <div class="outline">YOUR RULES</div>
+          </h1>
+          <p class="hero-sub">One premium ground for football & cricket. Fully floodlit, FIFA-grade surface, and instant online booking — right here in Pune.</p>
+          <div class="hero-actions">
+            <button class="btn-primary" onclick="go('booking')">⚽ Book a Slot</button>
+            <button class="btn-secondary" onclick="go('gallery')">📸 View Gallery</button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-card"><div class="stat-num">1</div><div class="stat-label">Premium Ground</div></div>
+            <div class="stat-card"><div class="stat-num">2</div><div class="stat-label">Sports Available</div></div>
+            <div class="stat-card"><div class="stat-num">24/7</div><div class="stat-label">Floodlit Play</div></div>
+          </div>
+          <!-- Quick booking widget -->
+          <div class="book-widget">
+            <div class="widget-title">⚡ Quick Check Availability</div>
+            <div class="widget-grid">
+              <div class="wfield"><label>Date</label><input type="date" id="qDate" /></div>
+              <div class="wfield"><label>Sport</label>
+                <select>
+                  <option>Football</option>
+                  <option>Cricket</option>
+                </select>
+              </div>
+              <button class="w-btn" onclick="go('booking')">Check →</button>
+            </div>
+          </div>
+        </div>
+        <!-- Carousel -->
+        <div class="hero-visual">
+          <div class="carousel" id="carousel">
+            <div class="carousel-track" id="ctrack">
+              <div class="carousel-slide" style="background:linear-gradient(135deg,#1b5e20,#2e7d32)">
+                <div style="font-size:88px">⚽</div>
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:3px">FOOTBALL</div>
+                <div style="font-size:13px;color:rgba(255,255,255,.7)">5v5 · 6v6 · 7v7</div>
+                <div class="carousel-overlay"></div>
+                <div class="carousel-info">
+                  <div class="carousel-tag">Football</div>
+                  <div class="carousel-caption">SS Turf — Football Ground</div>
+                </div>
+              </div>
+              <div class="carousel-slide" style="background:linear-gradient(135deg,#f57f17,#f9a825)">
+                <div style="font-size:88px">🏏</div>
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:3px">CRICKET</div>
+                <div style="font-size:13px;color:rgba(255,255,255,.7)">Box Cricket · T10</div>
+                <div class="carousel-overlay"></div>
+                <div class="carousel-info">
+                  <div class="carousel-tag" style="background:var(--yellow-dark)">Cricket</div>
+                  <div class="carousel-caption">SS Turf — Cricket Ground</div>
+                </div>
+              </div>
+              <div class="carousel-slide" style="background:linear-gradient(135deg,#004d40,#00695c)">
+                <div style="font-size:88px">🌙</div>
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:3px">NIGHT PLAY</div>
+                <div style="font-size:13px;color:rgba(255,255,255,.7)">Full Floodlights</div>
+                <div class="carousel-overlay"></div>
+                <div class="carousel-info">
+                  <div class="carousel-tag" style="background:#00897b">Night</div>
+                  <div class="carousel-caption">400W LED Floodlights</div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-dots" id="cdots"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint"><div class="scroll-arrow"></div>Scroll</div>
+  </section>
+
+  <div class="divider" style="margin-top:60px"></div>
+
+  <!-- SPORTS SECTION -->
+  <section class="section">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:0">
+        <span class="section-tag" style="display:inline-block">One Ground, Two Sports</span>
+        <div class="section-title">BOOK FOR <span style="color:var(--green)">FOOTBALL</span> OR <span style="color:var(--yellow-dark)">CRICKET</span></div>
+        <p class="section-subtitle" style="margin:0 auto;text-align:center">Our versatile turf is perfectly set up for both sports. Choose your game and book your slot!</p>
+      </div>
+      <div class="sport-grid">
+        <div class="sport-card">
+          <div class="sport-card-bg" style="background:linear-gradient(135deg,#1b5e20,#388e3c)">⚽</div>
+          <div class="sport-card-overlay"></div>
+          <div class="sport-card-info">
+            <div class="sport-badge" style="background:var(--green);color:#fff">Football</div>
+            <div class="sport-card-name">FOOTBALL</div>
+            <div class="sport-card-sub">5v5 · 6v6 · 7v7 formats available</div>
+            <button class="btn-primary" style="margin-top:16px;padding:10px 24px;font-size:13px" onclick="go('booking')">Book Football →</button>
+          </div>
+        </div>
+        <div class="sport-card">
+          <div class="sport-card-bg" style="background:linear-gradient(135deg,#e65100,#f9a825)">🏏</div>
+          <div class="sport-card-overlay"></div>
+          <div class="sport-card-info">
+            <div class="sport-badge" style="background:var(--yellow);color:var(--text)">Cricket</div>
+            <div class="sport-card-name">CRICKET</div>
+            <div class="sport-card-sub">Box Cricket · T10 matches</div>
+            <button class="btn-primary" style="margin-top:16px;padding:10px 24px;font-size:13px;background:var(--yellow-dark)" onclick="go('booking')">Book Cricket →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- FEATURES -->
+  <section class="section" style="background:var(--bg2)">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:0;flex-wrap:wrap;gap:24px">
+        <div>
+          <span class="section-tag">Why SS Turf</span>
+          <div class="section-title">WORLD CLASS<br><span style="color:var(--green)">FACILITIES</span></div>
+        </div>
+        <p class="section-subtitle">Built for serious players and weekend warriors. Every detail designed for the perfect game.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feat-card"><div class="feat-icon">💡</div><div class="feat-title">Floodlit Arena</div><div class="feat-desc">400W LED floodlights for broadcast-quality visibility at night. Play till 1AM without missing a beat.</div></div>
+        <div class="feat-card"><div class="feat-icon">🌿</div><div class="feat-title">Premium Surface</div><div class="feat-desc">FIFA-grade artificial turf with correct pile height — identical to professional pitches. Safe, fast, responsive.</div></div>
+        <div class="feat-card"><div class="feat-icon">🚗</div><div class="feat-title">Easy Parking</div><div class="feat-desc">Ample secure parking with CCTV. No hassle finding a spot — just show up and play.</div></div>
+        <div class="feat-card"><div class="feat-icon">🚿</div><div class="feat-title">Changing Rooms</div><div class="feat-desc">Clean, secure changing rooms and showers for both teams. Get fresh after every match.</div></div>
+        <div class="feat-card"><div class="feat-icon">☕</div><div class="feat-title">Refreshments</div><div class="feat-desc">Cold drinks, energy drinks, and snacks available on-site. Recharge between innings and halves.</div></div>
+        <div class="feat-card"><div class="feat-icon">📱</div><div class="feat-title">Instant Booking</div><div class="feat-desc">Book your slot online in 60 seconds. Instant confirmation — no phone calls, no queues.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- TESTIMONIALS -->
+  <section class="section">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:0">
+        <span class="section-tag" style="display:inline-block">Player Reviews</span>
+        <div class="section-title">WHAT PLAYERS <span style="color:var(--green)">SAY</span></div>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text">"Best turf in Pune! The surface is world-class and floodlights are super bright. Booked it three weekends in a row for our football team."</p>
+          <div class="testi-author"><div class="avatar" style="background:#2e7d32">RK</div><div><div class="author-name">Rahul Kulkarni</div><div class="author-role">Football · 5v5 Captain</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text">"We switched our cricket league here and never looked back. The pitch setup for cricket is excellent and booking online is super easy!"</p>
+          <div class="testi-author"><div class="avatar" style="background:#6a1a6e">PS</div><div><div class="author-name">Priya Sharma</div><div class="author-role">Cricket · Weekend League</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text">"Organised our corporate cricket day here — staff was amazing and the ground was in perfect condition. Highly recommend SS Turf!"</p>
+          <div class="testi-author"><div class="avatar" style="background:#bf360c">AM</div><div><div class="author-name">Arjun Mehta</div><div class="author-role">Cricket · Corporate Event</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ========== ABOUT ========== -->
+<div id="page-about" class="page">
+  <div style="padding-top:80px">
+    <section class="section">
+      <div class="container">
+        <div class="about-grid">
+          <div>
+            <span class="section-tag">Our Story</span>
+            <div class="section-title">PUNE'S FAVOURITE<br><span style="color:var(--green)">SPORTS GROUND</span></div>
+            <p style="font-size:15px;color:var(--text-muted);line-height:1.8;margin-top:18px;margin-bottom:16px">SS Turf was built with one vision — to give Pune's players a genuinely world-class experience. One ground, configured for both football and cricket, maintained to the highest standard.</p>
+            <p style="font-size:15px;color:var(--text-muted);line-height:1.8;margin-bottom:28px">Whether you're organising a 5v5 football match or a box cricket tournament, SS Turf is your home. Floodlights, changing rooms, and easy online booking — everything you need.</p>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
+              <div style="background:var(--green-light);border:1.5px solid var(--border-hover);border-radius:var(--radius);padding:20px;text-align:center">
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--green-dark)">1</div>
+                <div style="font-size:12px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Premium Ground</div>
+              </div>
+              <div style="background:var(--yellow-light);border:1.5px solid rgba(255,193,7,0.4);border-radius:var(--radius);padding:20px;text-align:center">
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--yellow-dark)">2</div>
+                <div style="font-size:12px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Sports Supported</div>
+              </div>
+              <div style="background:var(--green-light);border:1.5px solid var(--border-hover);border-radius:var(--radius);padding:20px;text-align:center">
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--green-dark)">18h</div>
+                <div style="font-size:12px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Daily Hours</div>
+              </div>
+              <div style="background:var(--yellow-light);border:1.5px solid rgba(255,193,7,0.4);border-radius:var(--radius);padding:20px;text-align:center">
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--yellow-dark)">400W</div>
+                <div style="font-size:12px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">LED Floodlights</div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="amenity-item"><div class="amen-dot"></div>FIFA Grade Turf</div>
+              <div class="amenity-item"><div class="amen-dot"></div>400W LED Lights</div>
+              <div class="amenity-item"><div class="amen-dot"></div>Football Setup</div>
+              <div class="amenity-item"><div class="amen-dot"></div>Cricket Setup</div>
+              <div class="amenity-item"><div class="amen-dot"></div>Changing Rooms</div>
+              <div class="amenity-item"><div class="amen-dot"></div>Secure Parking</div>
+              <div class="amenity-item"><div class="amen-dot"></div>Refreshments</div>
+              <div class="amenity-item"><div class="amen-dot"></div>CCTV Security</div>
+              <div class="amenity-item"><div class="amen-dot"></div>First Aid</div>
+              <div class="amenity-item"><div class="amen-dot"></div>Online Booking</div>
+            </div>
+          </div>
+          <div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div style="grid-column:span 2;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/7;background:linear-gradient(135deg,#1b5e20,#388e3c);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;border:2px solid var(--border)">
+                <div style="font-size:64px">⚽</div>
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;letter-spacing:2px">FOOTBALL SETUP</div>
+              </div>
+              <div style="border-radius:var(--radius);overflow:hidden;aspect-ratio:1;background:linear-gradient(135deg,#e65100,#f9a825);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;border:2px solid var(--border)">
+                <div style="font-size:44px">🏏</div>
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:2px">CRICKET</div>
+              </div>
+              <div style="border-radius:var(--radius);overflow:hidden;aspect-ratio:1;background:linear-gradient(135deg,#004d40,#00695c);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;border:2px solid var(--border)">
+                <div style="font-size:44px">🌙</div>
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:2px">NIGHT PLAY</div>
+              </div>
+            </div>
+
+            <!-- Ground config card -->
+            <div style="background:var(--yellow-light);border:2px solid var(--yellow-dark);border-radius:var(--radius-lg);padding:24px;margin-top:20px">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--yellow-dark);margin-bottom:12px">🏟️ Ground Configuration</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px">
+                <div><span style="color:var(--text-muted)">Dimensions:</span><br><strong>50 × 80 m</strong></div>
+                <div><span style="color:var(--text-muted)">Surface:</span><br><strong>Artificial Turf</strong></div>
+                <div><span style="color:var(--text-muted)">Football:</span><br><strong>5v5, 6v6, 7v7</strong></div>
+                <div><span style="color:var(--text-muted)">Cricket:</span><br><strong>Box / T10</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ========== BOOKING ========== -->
+<div id="page-booking" class="page">
+  <div style="padding-top:80px">
+    <section class="section">
+      <div class="container">
+        <div style="margin-bottom:36px">
+          <span class="section-tag">Online Booking</span>
+          <div class="section-title">BOOK YOUR <span style="color:var(--green)">SLOT</span></div>
+          <p style="font-size:15px;color:var(--text-muted);margin-top:10px">Select your sport, pick a date and time. Confirm in seconds — no phone calls needed.</p>
+        </div>
+
+        <div class="sport-tabs">
+          <div class="sport-tab active" onclick="selSport('Football',this)">⚽ Football</div>
+          <div class="sport-tab" onclick="selSport('Cricket',this)">🏏 Cricket</div>
+        </div>
+
+        <div class="booking-layout">
+          <div>
+            <!-- Calendar -->
+            <div class="b-panel" style="margin-bottom:20px">
+              <div class="b-panel-title"><span class="b-num">1</span> Select Date</div>
+              <div class="cal-header">
+                <button class="cal-nav" onclick="prevM()">‹</button>
+                <div class="cal-month" id="calM">April 2026</div>
+                <button class="cal-nav" onclick="nextM()">›</button>
+              </div>
+              <div class="cal-grid" id="calGrid"></div>
+            </div>
+            <!-- Slots -->
+            <div class="b-panel">
+              <div class="b-panel-title"><span class="b-num">2</span> Select Time Slot
+                <span id="dateBadge" style="font-family:'Space Mono',monospace;font-size:11px;background:var(--green-light);border:1.5px solid var(--border-hover);border-radius:6px;padding:3px 10px;color:var(--green-dark);margin-left:8px;font-weight:400"></span>
+              </div>
+              <div class="slots-grid" id="slotsGrid"></div>
+              <div class="slot-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Available</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#eee;border:1px solid #ddd"></div>Booked</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--green);opacity:.4"></div>Selected</div>
+              </div>
+              <!-- Pricing -->
+              <div style="margin-top:22px;border-top:1px solid var(--border);padding-top:22px">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:14px">💰 Pricing</div>
+                <div class="pricing-row" id="priceRow">
+                  <div class="price-card featured"><div class="price-name">Peak (6–10PM)</div><div class="price-amt">₹1,200<span class="price-unit">/hr</span></div></div>
+                  <div class="price-card"><div class="price-name">Off-Peak</div><div class="price-amt">₹800<span class="price-unit">/hr</span></div></div>
+                  <div class="price-card"><div class="price-name">Weekend</div><div class="price-amt">₹1,500<span class="price-unit">/hr</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Summary -->
+          <div>
+            <div class="b-panel" style="position:sticky;top:90px">
+              <div class="b-panel-title"><span class="b-num">3</span> Booking Summary</div>
+              <div id="summaryBox">
+                <div style="text-align:center;padding:28px 0;color:var(--text-muted)">
+                  <div style="font-size:40px;margin-bottom:10px">📋</div>
+                  <div style="font-size:13px">Select a date and time slot<br>to see your summary</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ========== GALLERY ========== -->
+<div id="page-gallery" class="page">
+  <div style="padding-top:80px">
+    <section class="section">
+      <div class="container">
+        <div style="margin-bottom:44px">
+          <span class="section-tag">Visual Tour</span>
+          <div class="section-title">OUR <span style="color:var(--green)">GALLERY</span></div>
+        </div>
+        <div class="gallery-filters">
+          <button class="filter-btn active" onclick="filterG('all',this)">All</button>
+          <button class="filter-btn" onclick="filterG('football',this)">⚽ Football</button>
+          <button class="filter-btn" onclick="filterG('cricket',this)">🏏 Cricket</button>
+          <button class="filter-btn" onclick="filterG('facilities',this)">🏗️ Facilities</button>
+          <button class="filter-btn" onclick="filterG('night',this)">🌙 Night</button>
+        </div>
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lbox" onclick="closeLB(event)">
+  <div class="lb-inner">
+    <button class="lb-close" onclick="closeLB()">✕</button>
+    <div id="lbContent" style="border-radius:var(--radius);overflow:hidden;border:2px solid var(--border)"></div>
+    <div class="lb-nav">
+      <button class="lb-btn" onclick="lbNav(-1,event)">‹</button>
+      <span id="lbCount" style="font-size:13px;color:rgba(255,255,255,.7);min-width:60px;text-align:center">1 / 10</span>
+      <button class="lb-btn" onclick="lbNav(1,event)">›</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CONTACT ========== -->
+<div id="page-contact" class="page">
+  <div style="padding-top:80px">
+    <section class="section">
+      <div class="container">
+        <div style="margin-bottom:52px">
+          <span class="section-tag">Get in Touch</span>
+          <div class="section-title">CONTACT <span style="color:var(--green)">US</span></div>
+        </div>
+        <div class="contact-grid">
+          <div>
+            <div class="cf-grid">
+              <div class="form-group"><label class="form-label">First Name</label><input class="form-input" placeholder="Rahul" id="cf1"/></div>
+              <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" placeholder="Kumar" id="cf2"/></div>
+              <div class="form-group full"><label class="form-label">Email Address</label><input class="form-input" type="email" placeholder="rahul@example.com" id="cf3"/></div>
+              <div class="form-group full"><label class="form-label">Phone Number</label><input class="form-input" type="tel" placeholder="+91 98765 43210" id="cf4"/></div>
+              <div class="form-group full"><label class="form-label">Message</label><textarea class="form-input" rows="5" placeholder="Tell us about your booking, event or query..." id="cf5"></textarea></div>
+              <div class="full"><button class="btn-primary" style="width:100%;justify-content:center" onclick="submitContact()">Send Message ↗</button></div>
+            </div>
+          </div>
+          <div>
+            <div class="ci-card"><div class="ci-icon">📍</div><div class="ci-label">Location</div><div class="ci-value">Baner Road, Near Balewadi Stadium,<br>Pune, Maharashtra 411045</div></div>
+            <div class="ci-card"><div class="ci-icon">📞</div><div class="ci-label">Phone</div><div class="ci-value" style="color:var(--green-dark)">+91 98765 43210</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">Mon–Sun · 6AM to 1AM</div></div>
+            <div class="ci-card"><div class="ci-icon">✉️</div><div class="ci-label">Email</div><div class="ci-value" style="color:var(--green-dark)">bookings@ssturf.in</div></div>
+            <div class="map-ph">
+              <div class="map-grid"></div>
+              <div class="map-pin">📍</div>
+              <div style="font-size:14px;font-weight:700;color:var(--green-dark);position:relative;z-index:1">SS Turf Sports Arena</div>
+              <div style="font-size:12px;color:var(--text-muted);position:relative;z-index:1">Baner Road, Pune</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">SS<span> TURF</span></div>
+        <p class="footer-desc">Pune's premium sports turf. One versatile FIFA-grade ground for football and cricket — with instant online booking.</p>
+        <div style="margin-top:16px;font-size:12px;color:rgba(255,255,255,.3)">Open Daily · 6AM – 1AM</div>
+      </div>
+      <div>
+        <div class="footer-heading">Navigation</div>
+        <ul class="footer-links">
+          <li><a href="#" onclick="go('home')">Home</a></li>
+          <li><a href="#" onclick="go('about')">About Us</a></li>
+          <li><a href="#" onclick="go('booking')">Book a Slot</a></li>
+          <li><a href="#" onclick="go('gallery')">Gallery</a></li>
+          <li><a href="#" onclick="go('contact')">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Sports</div>
+        <ul class="footer-links">
+          <li><a href="#" onclick="go('booking')">Football 5v5</a></li>
+          <li><a href="#" onclick="go('booking')">Football 7v7</a></li>
+          <li><a href="#" onclick="go('booking')">Box Cricket</a></li>
+          <li><a href="#" onclick="go('about')">Corporate Events</a></li>
+          <li><a href="#" onclick="go('about')">Tournaments</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Contact</div>
+        <ul class="footer-links">
+          <li><a href="#">Baner Road, Pune</a></li>
+          <li><a href="#">+91 98765 43210</a></li>
+          <li><a href="#">bookings@ssturf.in</a></li>
+          <li><a href="#">6AM – 1AM Daily</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 SS Turf Sports Arena · All rights reserved</div>
+      <div style="display:flex;gap:8px">
+        <div class="social-btn">📸</div>
+        <div class="social-btn">🐦</div>
+        <div class="social-btn">💬</div>
+        <div class="social-btn">▶️</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- SUCCESS MODAL -->
+<div class="smodal" id="smodal">
+  <div class="scard">
+    <span class="sicon">🏟️</span>
+    <div class="stitle">BOOKED!</div>
+    <p class="ssub" id="sdetails">Your slot is confirmed. See you on the ground!</p>
+    <div class="sref" id="sref">REF: SS-XXXX-XXXX</div><br/>
+    <button class="s-close" onclick="closeModal()">Done ✓</button>
+  </div>
+</div>
+
+<script>
+// ── Navigation ──
+function go(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  const el=document.getElementById('nl-'+page);
+  if(el)el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Navbar scroll ──
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50);
+});
+
+// ── Mobile menu ──
+function toggleMenu(){
+  document.getElementById('ham').classList.toggle('open');
+  document.getElementById('mmenu').classList.toggle('open');
+}
+
+// ── Carousel ──
+let cSlide=0;
+const slides=[
+  {emoji:'⚽',name:'FOOTBALL',sub:'5v5 · 6v6 · 7v7',bg:'linear-gradient(135deg,#1b5e20,#2e7d32)',tag:'Football',tagBg:'#00c853'},
+  {emoji:'🏏',name:'CRICKET',sub:'Box Cricket · T10',bg:'linear-gradient(135deg,#e65100,#f9a825)',tag:'Cricket',tagBg:'#f9a825'},
+  {emoji:'🌙',name:'NIGHT PLAY',sub:'Full Floodlights',bg:'linear-gradient(135deg,#004d40,#00695c)',tag:'Night',tagBg:'#00897b'},
+];
+function initCarousel(){
+  const d=document.getElementById('cdots');
+  if(!d)return;
+  d.innerHTML='';
+  slides.forEach((_,i)=>{
+    const dot=document.createElement('div');
+    dot.className='cdot'+(i===0?' active':'');
+    dot.style.width=i===0?'20px':'6px';
+    dot.onclick=()=>goSlide(i);
+    d.appendChild(dot);
+  });
+}
+function goSlide(i){
+  const track=document.getElementById('ctrack');
+  if(!track)return;
+  track.style.transform=`translateX(-${i*100}%)`;
+  document.querySelectorAll('.cdot').forEach((d,j)=>{
+    d.classList.toggle('active',j===i);
+    d.style.width=j===i?'20px':'6px';
+  });
+  cSlide=i;
+}
+setInterval(()=>goSlide((cSlide+1)%slides.length),4000);
+initCarousel();
+document.getElementById('qDate').value='2026-04-11';
+
+// ── Calendar ──
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+let calY=2026,calMo=3,selDate=null,selSlot=null,curSport='Football';
+const today=new Date(2026,3,11);
+
+function renderCal(){
+  document.getElementById('calM').textContent=MONTHS[calMo]+' '+calY;
+  const g=document.getElementById('calGrid');
+  if(!g)return;
+  g.innerHTML='';
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>{
+    const el=document.createElement('div');
+    el.className='cal-dow';el.textContent=d;g.appendChild(el);
+  });
+  const first=new Date(calY,calMo,1).getDay();
+  const days=new Date(calY,calMo+1,0).getDate();
+  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='cal-day disabled';g.appendChild(e);}
+  for(let d=1;d<=days;d++){
+    const el=document.createElement('div');
+    const dt=new Date(calY,calMo,d);
+    const past=dt<today&&!(calY===today.getFullYear()&&calMo===today.getMonth()&&d===today.getDate());
+    const tod=calY===today.getFullYear()&&calMo===today.getMonth()&&d===today.getDate();
+    const sel=selDate&&selDate.d===d&&selDate.m===calMo&&selDate.y===calY;
+    el.className='cal-day'+(past?' past':'')+(tod&&!sel?' today':'')+(sel?' selected':'');
+    el.textContent=d;
+    if(!past)el.onclick=()=>pickDate(d,calMo,calY);
+    g.appendChild(el);
+  }
+}
+function pickDate(d,m,y){selDate={d,m,y};selSlot=null;renderCal();renderSlots();document.getElementById('dateBadge').textContent=d+'/'+( m+1)+'/'+y;updateSummary();}
+function prevM(){calMo--;if(calMo<0){calMo=11;calY--;}renderCal();}
+function nextM(){calMo++;if(calMo>11){calMo=0;calY++;}renderCal();}
+
+// ── Slots ──
+const SLOTS=['06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+const bookedCache={};
+function getBooked(key){
+  if(!bookedCache[key]){
+    let h=0;for(const c of key)h=(h*31+c.charCodeAt(0))&0xffffffff;
+    const s=new Set();const n=3+(Math.abs(h)%5);
+    while(s.size<n){h=(h*1664525+1013904223)&0xffffffff;s.add(SLOTS[Math.abs(h)%SLOTS.length]);}
+    bookedCache[key]=s;
+  }
+  return bookedCache[key];
+}
+function renderSlots(){
+  const g=document.getElementById('slotsGrid');
+  if(!g)return;
+  if(!selDate){g.innerHTML='<div style="grid-column:span 3;text-align:center;color:var(--text-muted);padding:18px;font-size:13px">← Select a date first</div>';return;}
+  const key=`${selDate.y}-${selDate.m}-${selDate.d}-${curSport}`;
+  const booked=getBooked(key);
+  g.innerHTML='';
+  SLOTS.forEach(t=>{
+    const el=document.createElement('div');
+    const isB=booked.has(t),isSel=selSlot===t;
+    el.className='slot '+(isB?'booked':isSel?'selected':'available');
+    el.textContent=t;
+    if(isB)el.title='Already booked';
+    if(!isB)el.onclick=()=>{selSlot=t;renderSlots();updateSummary();};
+    g.appendChild(el);
+  });
+}
+function selSport(s,el){
+  curSport=s;selSlot=null;
+  document.querySelectorAll('.sport-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const prices={Football:{peak:1200,off:800,wknd:1500},Cricket:{peak:1000,off:700,wknd:1300}};
+  const p=prices[s]||prices.Football;
+  const r=document.getElementById('priceRow');
+  if(r)r.innerHTML=`<div class="price-card featured"><div class="price-name">Peak (6–10PM)</div><div class="price-amt">₹${p.peak}<span class="price-unit">/hr</span></div></div><div class="price-card"><div class="price-name">Off-Peak</div><div class="price-amt">₹${p.off}<span class="price-unit">/hr</span></div></div><div class="price-card"><div class="price-name">Weekend</div><div class="price-amt">₹${p.wknd}<span class="price-unit">/hr</span></div></div>`;
+  renderSlots();updateSummary();
+}
+function getPrice(){
+  if(!selDate||!selSlot)return 0;
+  const dow=new Date(selDate.y,selDate.m,selDate.d).getDay();
+  const h=parseInt(selSlot);
+  const wknd=dow===0||dow===6;
+  const prices={Football:{peak:1200,off:800,wknd:1500},Cricket:{peak:1000,off:700,wknd:1300}};
+  const p=prices[curSport]||prices.Football;
+  if(wknd)return p.wknd;
+  if(h>=18&&h<22)return p.peak;
+  return p.off;
+}
+function updateSummary(){
+  const el=document.getElementById('summaryBox');if(!el)return;
+  if(!selDate||!selSlot){el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--text-muted)"><div style="font-size:40px;margin-bottom:10px">📋</div><div style="font-size:13px">Select a date and time slot<br>to see your summary</div></div>';return;}
+  const price=getPrice(),gst=Math.round(price*.18),total=price+gst;
+  const dStr=`${selDate.d} ${MONTHS[selDate.m].slice(0,3)} ${selDate.y}`;
+  el.innerHTML=`
+    <div class="summary-row"><span class="lbl">Sport</span><span class="val">${curSport}</span></div>
+    <div class="summary-row"><span class="lbl">Date</span><span class="val">${dStr}</span></div>
+    <div class="summary-row"><span class="lbl">Time</span><span class="val" style="font-family:'Space Mono',monospace;font-size:12px">${selSlot} – ${String(parseInt(selSlot)+1).padStart(2,'0')}:00</span></div>
+    <div class="summary-row"><span class="lbl">Duration</span><span class="val">1 Hour</span></div>
+    <div class="summary-row"><span class="lbl">Slot Rate</span><span class="val">₹${price.toLocaleString()}</span></div>
+    <div class="summary-row"><span class="lbl">GST (18%)</span><span class="val">₹${gst.toLocaleString()}</span></div>
+    <div class="summary-total"><div class="total-lbl">Total Payable</div><div class="total-amt">₹${total.toLocaleString()}</div></div>
+    <button class="book-now" onclick="confirmBook()">🏟️ Confirm & Pay</button>
+    <div style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:10px">Secure payment · Instant confirmation</div>
+  `;
+}
+function confirmBook(){
+  if(!selDate||!selSlot)return;
+  const dStr=`${selDate.d} ${MONTHS[selDate.m].slice(0,3)} ${selDate.y}`;
+  document.getElementById('sdetails').textContent=`${curSport} on ${dStr} at ${selSlot}. See you on the ground!`;
+  const ref='SS-'+Math.random().toString(36).substr(2,4).toUpperCase()+'-'+Math.random().toString(36).substr(2,4).toUpperCase();
+  document.getElementById('sref').textContent='REF: '+ref;
+  const key=`${selDate.y}-${selDate.m}-${selDate.d}-${curSport}`;
+  if(bookedCache[key])bookedCache[key].add(selSlot);
+  selSlot=null;
+  document.getElementById('smodal').classList.add('open');
+}
+function closeModal(){document.getElementById('smodal').classList.remove('open');renderSlots();updateSummary();}
+
+// ── Gallery ──
+const galleryData=[
+  {emoji:'⚽',bg:'linear-gradient(135deg,#1b5e20,#388e3c)',label:'Match Night — Football',cat:'football'},
+  {emoji:'🌙',bg:'linear-gradient(135deg,#004d40,#00695c)',label:'Night League Play',cat:'night'},
+  {emoji:'🏏',bg:'linear-gradient(135deg,#e65100,#f9a825)',label:'Box Cricket Action',cat:'cricket'},
+  {emoji:'🚿',bg:'linear-gradient(135deg,#0d47a1,#1565c0)',label:'Changing Rooms',cat:'facilities'},
+  {emoji:'🏟️',bg:'linear-gradient(135deg,#1b5e20,#2e7d32)',label:'Full Ground View',cat:'football'},
+  {emoji:'💡',bg:'linear-gradient(135deg,#33691e,#558b2f)',label:'Floodlit Evening',cat:'night'},
+  {emoji:'🎯',bg:'linear-gradient(135deg,#006064,#00838f)',label:'Training Session',cat:'football'},
+  {emoji:'🏆',bg:'linear-gradient(135deg,#bf360c,#e64a19)',label:'Cricket Tournament',cat:'cricket'},
+  {emoji:'☕',bg:'linear-gradient(135deg,#4e342e,#6d4c41)',label:'Refreshment Zone',cat:'facilities'},
+  {emoji:'🌿',bg:'linear-gradient(135deg,#2e7d32,#43a047)',label:'Turf Close-up',cat:'football'},
+  {emoji:'🌃',bg:'linear-gradient(135deg,#1a237e,#283593)',label:'Night Panorama',cat:'night'},
+  {emoji:'🚗',bg:'linear-gradient(135deg,#37474f,#455a64)',label:'Parking Area',cat:'facilities'},
+];
+let lbIdx=0;
+function renderGallery(f='all'){
+  const g=document.getElementById('galleryGrid');if(!g)return;
+  g.innerHTML='';
+  const items=f==='all'?galleryData:galleryData.filter(x=>x.cat===f);
+  items.forEach((item,i)=>{
+    const el=document.createElement('div');
+    el.className='g-item';
+    if(i%4===0){el.style.gridColumn='span 2';el.style.aspectRatio='16/9';}
+    el.innerHTML=`<div style="width:100%;height:100%;min-height:160px;background:${item.bg};display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px"><div style="font-size:44px">${item.emoji}</div><div style="font-size:11px;color:rgba(255,255,255,.6);font-weight:600;letter-spacing:.5px;padding:0 10px;text-align:center">${item.label}</div></div><div class="g-overlay"><div class="g-zoom">🔍</div></div>`;
+    el.onclick=()=>openLB(galleryData.indexOf(item));
+    g.appendChild(el);
+  });
+}
+function filterG(cat,btn){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderGallery(cat);}
+function openLB(i){lbIdx=i;showLB();document.getElementById('lbox').classList.add('open');}
+function showLB(){
+  const item=galleryData[lbIdx];
+  document.getElementById('lbContent').innerHTML=`<div style="width:min(80vw,600px);height:min(55vh,440px);background:${item.bg};display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px"><div style="font-size:72px">${item.emoji}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:rgba(255,255,255,.85);letter-spacing:2px">${item.label.toUpperCase()}</div></div>`;
+  document.getElementById('lbCount').textContent=(lbIdx+1)+' / '+galleryData.length;
+}
+function lbNav(d,e){if(e)e.stopPropagation();lbIdx=(lbIdx+d+galleryData.length)%galleryData.length;showLB();}
+function closeLB(e){if(e&&e.target!==document.getElementById('lbox')&&!e.target.classList.contains('lb-close'))return;document.getElementById('lbox').classList.remove('open');}
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('lbox').classList.contains('open'))return;
+  if(e.key==='ArrowLeft')lbNav(-1);
+  if(e.key==='ArrowRight')lbNav(1);
+  if(e.key==='Escape')document.getElementById('lbox').classList.remove('open');
+});
+
+// ── Contact ──
+function submitContact(){
+  const n=document.getElementById('cf1').value,em=document.getElementById('cf3').value;
+  if(!n||!em){alert('Please fill in your name and email.');return;}
+  document.getElementById('sdetails').textContent=`Thanks ${n}! We'll reply to ${em} within 24 hours.`;
+  const ref='SS-MSG-'+Math.random().toString(36).substr(2,6).toUpperCase();
+  document.getElementById('sref').textContent='TICKET: '+ref;
+  document.getElementById('smodal').classList.add('open');
+  ['cf1','cf2','cf3','cf4','cf5'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+
+// ── Init ──
+renderCal();
+renderSlots();
+renderGallery();
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});
+},{threshold:.1});
+setTimeout(()=>{
+  document.querySelectorAll('.feat-card,.testi-card,.stat-card').forEach(el=>{
+    el.style.opacity='0';el.style.transform='translateY(18px)';
+    el.style.transition='opacity .45s ease,transform .45s ease';
+    obs.observe(el);
+  });
+},200);
+</script>
+</body>
+</html>
